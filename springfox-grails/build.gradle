@@ -18,8 +18,11 @@ buildscript {
     maven {
       url "https://plugins.gradle.org/m2/"
     }
+    mavenLocal()
     jcenter()
     mavenCentral()
+    maven {url "https://repo.grails.org/grails/core"}
+    maven {url 'https://oss.jfrog.org/artifactory/oss-snapshot-local/'}
   }
 
 }
@@ -38,19 +41,19 @@ description = 'Springfox Grails module that produces grails specific documentati
 
 configurations {
     provided
-    compile.extendsFrom provided
+    implementation.extendsFrom provided
 }
 
 dependencies {
-    testCompile "org.springframework:spring-test:${spring}"
-    testCompile "com.jayway.jsonpath:json-path:${jsonPath}"
-    testCompile "org.slf4j:slf4j-simple:${slf4j}"
-    testCompile "org.yaml:snakeyaml:${snakeyaml}"
-    testCompile "org.spockframework:spock-spring:${spock}"
-    testCompile "org.spockframework:spock-core:${spock}"
-    testCompile "org.codehaus.groovy:groovy-all:${groovy}"
-    testCompile "org.grails:grails-plugin-testing:${grails}"
-    testCompile "org.grails:grails-plugin-rest:${grails}"
+    testImplementation "org.springframework:spring-test:${spring}"
+    testImplementation "com.jayway.jsonpath:json-path:${jsonPath}"
+    testImplementation "org.slf4j:slf4j-simple:${slf4j}"
+    testImplementation "org.yaml:snakeyaml:${snakeyaml}"
+    testImplementation "org.spockframework:spock-spring:${spock}"
+    testImplementation "org.spockframework:spock-core:${spock}"
+    testImplementation "org.codehaus.groovy:groovy-all:${groovy}"
+    //testImplementation "org.grails:grails-plugin-testing:${grails}"
+    testImplementation "org.grails:grails-plugin-rest:${grails}"
 
     provided "io.swagger:swagger-annotations:${swagger2Core}"
     provided "org.springframework:spring-core:$spring"
@@ -63,13 +66,13 @@ dependencies {
     provided "org.grails:grails-web-url-mappings:$grails"
     provided "javax.servlet:javax.servlet-api:$servlet"
 
-    compile "com.google.guava:guava:${guava}"
-    compile "com.fasterxml:classmate:${classmate}"
-    compile "org.slf4j:slf4j-api:${slf4j}"
-    compile "io.springfox:springfox-spi:${springfox}"
-    compile "io.springfox:springfox-core:${springfox}"
-    compile "io.springfox:springfox-swagger2:${springfox}"
-    compile "net.bytebuddy:byte-buddy:${byteBuddyVersion}"
+    implementation "com.google.guava:guava:${guava}"
+    implementation "com.fasterxml:classmate:${classmate}"
+    implementation "org.slf4j:slf4j-api:${slf4j}"
+    implementation "io.springfox:springfox-spi:${springfox}"
+    implementation "io.springfox:springfox-core:${springfox}"
+    implementation "io.springfox:springfox-swagger2:${springfox}"
+    implementation "net.bytebuddy:byte-buddy:${byteBuddyVersion}"
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
