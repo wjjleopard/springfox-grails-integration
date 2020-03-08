@@ -3,10 +3,10 @@ package springfox.documentation.grails
 import com.fasterxml.classmate.TypeResolver
 import com.google.common.base.Objects
 import grails.core.GrailsControllerClass
-import grails.core.GrailsDomainClass
 import grails.web.mapping.LinkGenerator
 import grails.web.mapping.UrlMappings
 import io.swagger.annotations.Api
+import org.grails.datastore.mapping.model.PersistentEntity
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.method.HandlerMethod
@@ -43,7 +43,7 @@ class GrailsRequestHandlerSpec extends Specification implements UrlMappingSuppor
       sut.returnType == resolver.resolve(Pet)
       sut.key() == new RequestHandlerKey(paths.getPatterns(), [RequestMethod.GET] as Set, mediaTypes, mediaTypes)
       sut.handlerMethod.equals(handlerMethod())
-      sut.name == "testActionTestDomainLogicalPropertyName"
+      sut.name == "testActionTestDomain"
       sut.groupName() == "AnotherLogicalPropertyName"
       sut.headers() == [] as Set
       sut.params() == [] as Set
@@ -63,7 +63,7 @@ class GrailsRequestHandlerSpec extends Specification implements UrlMappingSuppor
     new GrailsRequestHandler(
         new GrailsActionContext(
             controller(),
-            domain(),
+            entity(),
             attributes,
             "testAction",
             resolver)
@@ -103,11 +103,11 @@ class GrailsRequestHandlerSpec extends Specification implements UrlMappingSuppor
     links
   }
 
-  GrailsDomainClass domain() {
-    def domain = Mock(GrailsDomainClass)
-    domain.name >> "testDomain"
-    domain.logicalPropertyName >> "TestDomainLogicalPropertyName"
-    domain
+  PersistentEntity entity() {
+    def entity = Mock(PersistentEntity)
+    entity.name >> "TestDomain"
+    entity.javaClass >> TestDomain.class
+    entity
   }
 
   GrailsControllerClass controller() {

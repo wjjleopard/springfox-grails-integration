@@ -3,10 +3,11 @@ package springfox.documentation.grails
 import com.fasterxml.classmate.TypeResolver
 import grails.core.GrailsApplication
 import grails.core.GrailsControllerClass
-import grails.core.GrailsDomainClass
 import grails.web.mapping.LinkGenerator
 import grails.web.mapping.UrlMapping
 import grails.web.mapping.UrlMappings
+import org.grails.datastore.mapping.model.MappingContext
+import org.grails.datastore.mapping.model.PersistentEntity
 import spock.lang.Specification
 
 class GrailsRequestHandlerProviderSpec extends Specification implements UrlMappingSupport {
@@ -58,16 +59,16 @@ class GrailsRequestHandlerProviderSpec extends Specification implements UrlMappi
   GrailsApplication application() {
     def application = Mock(GrailsApplication)
     application.getArtefacts("Controller") >> [bookController()]
-    application.getArtefacts("Domain") >> [bookDomain()]
+    application.getMappingContext() >> Mock(MappingContext)
+    application.getMappingContext().getPersistentEntities() >> [bookEntity()]
     application
   }
 
-  def bookDomain() {
-    def domain = Mock(GrailsDomainClass)
-    domain.logicalPropertyName >> "Book"
-    domain.name >> "book"
-    domain.clazz >> Book
-    domain
+  def bookEntity() {
+    def entity = Mock(PersistentEntity)
+    entity.name >> "book"
+    entity.javaClass >> Book
+    entity
   }
 
   def bookController() {

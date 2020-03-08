@@ -5,7 +5,7 @@ import grails.boot.config.GrailsAutoConfiguration
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Import
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import springfox.documentation.grails.SpringfoxGrailsIntegrationConfiguration
 import springfox.documentation.spi.DocumentationType
 import springfox.documentation.spring.web.plugins.Docket
@@ -31,8 +31,8 @@ class Application extends GrailsAutoConfiguration {
   }
 
   @Bean
-  static WebMvcConfigurerAdapter webConfigurer() {
-    new WebMvcConfigurerAdapter() {
+  static WebMvcConfigurer webConfigurer() {
+    new WebMvcConfigurer() {
       @Override
       void addResourceHandlers(ResourceHandlerRegistry registry) {
         if (!registry.hasMappingForPattern("/webjars/**")) {

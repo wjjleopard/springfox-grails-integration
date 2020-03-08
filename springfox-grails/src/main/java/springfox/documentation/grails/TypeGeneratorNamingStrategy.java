@@ -1,7 +1,7 @@
 package springfox.documentation.grails;
 
-import grails.core.GrailsDomainClass;
+import org.grails.datastore.mapping.model.PersistentEntity;
 
 public interface TypeGeneratorNamingStrategy {
-  String name(GrailsDomainClass domain);
+  String name(PersistentEntity entity);
 }

@@ -1,7 +1,8 @@
 package springfox.documentation.grails
 
-import grails.core.GrailsDomainClass
-import grails.core.GrailsDomainClassProperty
+import org.grails.datastore.mapping.model.PersistentEntity
+import org.grails.datastore.mapping.model.PersistentProperty
+import org.grails.datastore.mapping.model.types.Association
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -21,26 +22,31 @@ class DefaultGrailsPropertySelectorSpec extends Specification {
       versionEntity() | false
   }
 
-  GrailsDomainClassProperty version() {
+  PersistentProperty version() {
     property("version", null)
   }
 
-  GrailsDomainClassProperty scalar() {
+  PersistentProperty scalar() {
     property("name", null)
   }
 
-  GrailsDomainClassProperty entity() {
-    property("name", Mock(GrailsDomainClass))
+  PersistentProperty entity() {
+    property("name", Mock(PersistentEntity))
   }
 
-  GrailsDomainClassProperty versionEntity() {
-    property("version", Mock(GrailsDomainClass))
+  PersistentProperty versionEntity() {
+    property("version", Mock(PersistentEntity))
   }
   
   def property(name, domain) {
-    def property = Mock(GrailsDomainClassProperty)
+    def property
+    if (domain != null) {
+      property = Mock(Association)
+      property.associatedEntity >> domain
+    }else {
+      property = Mock(PersistentProperty)
+    }
     property.name >> name
-    property.referencedDomainClass >> domain
     property
   }
 }

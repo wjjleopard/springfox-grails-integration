@@ -1,29 +1,15 @@
 package springfox.documentation.grails;
 
-import grails.core.GrailsDomainClassProperty;
+import org.grails.datastore.mapping.model.PersistentProperty;
 import springfox.documentation.builders.AlternateTypePropertyBuilder;
 
 public class DefaultGrailsPropertyTransformer implements GrailsPropertyTransformer {
   @Override
-  public AlternateTypePropertyBuilder apply(GrailsDomainClassProperty property) {
-    Class type = property.getReferencedPropertyType();
-    if (!property.isPersistent() && property.getName().endsWith("Id")) {
-      type = relatedDomainIdentifierType(relatedDomainProperty(property));
-    }
-
+  public AlternateTypePropertyBuilder apply(PersistentProperty property) {
     return new AlternateTypePropertyBuilder()
         .withName(property.getName())
-        .withType(type)
+        .withType(property.getType())
         .withCanRead(true)
         .withCanWrite(true);
-  }
-
-  private Class relatedDomainIdentifierType(GrailsDomainClassProperty property) {
-    return property.getDomainClass().getIdentifier().getType();
-  }
-
-  private GrailsDomainClassProperty relatedDomainProperty(GrailsDomainClassProperty property) {
-    String entityPropertyName = property.getName().replace("Id", "");
-    return property.getDomainClass().getPropertyByName(entityPropertyName);
   }
 }

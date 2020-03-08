@@ -1,17 +1,16 @@
 package springfox.documentation.grails;
 
-import grails.core.GrailsDomainClass;
-
+import org.grails.datastore.mapping.model.PersistentEntity;
 
 @FunctionalInterface
 public interface ActionSpecificationFactory {
-  default Class<?> idType(GrailsDomainClass domain) {
-    return domain != null ? domain.getIdentifier().getType() : Void.TYPE;
+  default Class<?> idType(PersistentEntity entity) {
+    return entity != null ? entity.getIdentity().getType() : Void.TYPE;
   }
 
-  default Class domainClass(GrailsDomainClass domain) {
-    if (domain != null) {
-      return domain.getClazz();
+  default Class entityClass(PersistentEntity entity) {
+    if (entity != null) {
+      return entity.getJavaClass();
     }
     return Void.TYPE;
   }

@@ -1,8 +1,7 @@
 package springfox.documentation.grails;
 
-import grails.core.GrailsDomainClassProperty;
-
 import java.util.function.Predicate;
+import org.grails.datastore.mapping.model.PersistentProperty;
 
-public interface GrailsPropertySelector extends Predicate<GrailsDomainClassProperty> {
+public interface GrailsPropertySelector extends Predicate<PersistentProperty> {
 }

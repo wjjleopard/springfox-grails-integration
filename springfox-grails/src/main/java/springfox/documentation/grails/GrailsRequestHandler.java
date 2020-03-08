@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.springframework.util.StringUtils.*;
+import static springfox.documentation.grails.Entities.getEntityLogicalPropertyName;
 
 class GrailsRequestHandler implements RequestHandler {
   private final GrailsActionContext actionContext;
@@ -56,11 +57,11 @@ class GrailsRequestHandler implements RequestHandler {
 
   @Override
   public String getName() {
-    return java.util.Optional.ofNullable(actionContext.getDomainClass())
-        .map(domain -> String.format(
+    return java.util.Optional.ofNullable(actionContext.getPersistentEntity())
+        .map(entity -> String.format(
             "%s%s",
             actionContext.getAction(),
-            capitalize(domain.getLogicalPropertyName())))
+            capitalize(getEntityLogicalPropertyName(entity))))
         .orElse(actionContext.getAction());
   }
 

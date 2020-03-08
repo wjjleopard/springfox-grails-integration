@@ -2,8 +2,9 @@ package springfox.documentation.grails
 
 import com.fasterxml.classmate.TypeResolver
 import grails.core.GrailsApplication
-import grails.core.GrailsDomainClass
-import grails.core.GrailsDomainClassProperty
+import org.grails.datastore.mapping.model.MappingContext
+import org.grails.datastore.mapping.model.PersistentEntity
+import org.grails.datastore.mapping.model.PersistentProperty
 import spock.lang.Specification
 
 
@@ -35,22 +36,23 @@ class DefaultGrailsAlternateTypeRuleConventionSpec extends Specification {
 
   def grailsApplication() {
     def app = Mock(GrailsApplication)
-    app.getArtefacts("Domain") >> [petDomain()]
+    app.getMappingContext() >> Mock(MappingContext)
+    app.getMappingContext().getPersistentEntities() >> [petEntity()]
     app
   }
 
-  def petDomain() {
-    def domain = Mock(GrailsDomainClass)
-    domain.name >> "Pet"
-    domain.clazz >> Pet
-    domain.properties >> [property("name", String)]
-    domain
+  def petEntity() {
+    def entity = Mock(PersistentEntity)
+    entity.name >> "Pet"
+    entity.javaClass >> Pet
+    entity.persistentProperties >> [property("name", String)]
+    entity
   }
 
   def property(name, type) {
-    def property = Mock(GrailsDomainClassProperty)
+    def property = Mock(PersistentProperty)
     property.name >> name
-    property.referencedPropertyType >> type
+    property.type >> type
     property
   }
 }

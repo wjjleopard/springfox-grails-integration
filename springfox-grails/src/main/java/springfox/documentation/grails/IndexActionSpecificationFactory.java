@@ -24,7 +24,7 @@ class IndexActionSpecificationFactory implements ActionSpecificationFactory {
         context.supportedMediaTypes(),
         context.handlerMethod(),
         parameters(context),
-        resolver.resolve(List.class, domainClass(context.getDomainClass())));
+        resolver.resolve(List.class, entityClass(context.getPersistentEntity())));
   }
 
   private List<ResolvedMethodParameter> parameters(GrailsActionContext context) {

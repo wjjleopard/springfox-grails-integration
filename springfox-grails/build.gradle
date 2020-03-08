@@ -54,6 +54,8 @@ dependencies {
     testImplementation "org.codehaus.groovy:groovy-all:${groovy}"
     //testImplementation "org.grails:grails-plugin-testing:${grails}"
     testImplementation "org.grails:grails-plugin-rest:${grails}"
+    testImplementation "cglib:cglib-nodep:${cglib}"
+    testImplementation "org.objenesis:objenesis:${objenesis}"
 
     provided "io.swagger:swagger-annotations:${swagger2Core}"
     provided "org.springframework:spring-core:$spring"

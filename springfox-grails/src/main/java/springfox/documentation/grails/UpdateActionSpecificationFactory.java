@@ -20,7 +20,7 @@ class UpdateActionSpecificationFactory implements ActionSpecificationFactory {
     List<ResolvedMethodParameter> parameters = new ArrayList<>(context.pathParameters());
     parameters.add(bodyParameter(
         parameters.size(),
-        resolver.resolve(domainClass(context.getDomainClass()))));
+        resolver.resolve(entityClass(context.getPersistentEntity()))));
     return new ActionSpecification(
         context.path(),
         context.getRequestMethods(),
@@ -28,7 +28,7 @@ class UpdateActionSpecificationFactory implements ActionSpecificationFactory {
         context.supportedMediaTypes(),
         context.handlerMethod(),
         parameters,
-        resolver.resolve(domainClass(context.getDomainClass())));
+        resolver.resolve(entityClass(context.getPersistentEntity())));
 
   }
 }

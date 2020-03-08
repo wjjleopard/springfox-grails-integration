@@ -2,14 +2,12 @@ package springfox.documentation.grails;
 
 import com.fasterxml.classmate.TypeResolver;
 import grails.core.GrailsApplication;
-import grails.core.GrailsDomainClass;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 import springfox.documentation.schema.AlternateTypeRule;
 import springfox.documentation.schema.AlternateTypeRuleConvention;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,11 +33,11 @@ public class DefaultGrailsAlternateTypeRuleConvention implements AlternateTypeRu
 
   @Override
   public List<AlternateTypeRule> rules() {
-    return Arrays.stream(application.getArtefacts("Domain"))
-        .filter(GrailsDomainClass.class::isInstance)
-        .map(domain -> newRule(
-            domain.getClazz(),
-            resolver.resolve(typeGenerator.from((GrailsDomainClass) domain)), getOrder()))
+    return
+        application.getMappingContext().getPersistentEntities().stream()
+        .map(entity -> newRule(
+            entity.getJavaClass(),
+            resolver.resolve(typeGenerator.from(entity)), getOrder()))
         .collect(Collectors.toList());
   }
 

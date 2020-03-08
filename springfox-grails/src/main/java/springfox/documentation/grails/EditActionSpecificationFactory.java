@@ -18,7 +18,7 @@ class EditActionSpecificationFactory implements ActionSpecificationFactory {
         context.supportedMediaTypes(),
         context.handlerMethod(),
         context.pathParameters(),
-        resolver.resolve(domainClass(context.getDomainClass())));
+        resolver.resolve(entityClass(context.getPersistentEntity())));
 
   }
 }

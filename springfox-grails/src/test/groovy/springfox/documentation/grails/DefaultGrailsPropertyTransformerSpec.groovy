@@ -1,7 +1,7 @@
 package springfox.documentation.grails
 
-import grails.core.GrailsDomainClass
-import grails.core.GrailsDomainClassProperty
+import org.grails.datastore.mapping.model.PersistentEntity
+import org.grails.datastore.mapping.model.PersistentProperty
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -20,7 +20,6 @@ class DefaultGrailsPropertyTransformerSpec extends Specification {
       property                        | name                | type
       id()                            | "id"                | Long
       relatedEntityProperty()         | "relatedEntity"     | RelatedEntity
-      relatedEntityIdProperty()       | "relatedEntityId"   | Long
       scalarProperty("test", String)  | "test"              | String
   }
 
@@ -29,43 +28,24 @@ class DefaultGrailsPropertyTransformerSpec extends Specification {
   }
 
   def scalarProperty(propertyName, propertyType) {
-    def property = Mock(GrailsDomainClassProperty)
-    property.referencedPropertyType >> propertyType
+    def property = Mock(PersistentProperty)
     property.type >> propertyType
-    property.persistent >> true
     property.name >> propertyName
     property
   }
 
   def relatedEntityProperty() {
-    def property = Mock(GrailsDomainClassProperty)
-    property.referencedPropertyType >> RelatedEntity
-    property.persistent >> true
+    def property = Mock(PersistentProperty)
+    property.type >> RelatedEntity
     property.name >> "relatedEntity"
-    property.domainClass >> relatedEntityDomain()
+    property.owner >> relatedEntityDomain()
     property
   }
 
-  def relatedEntityIdProperty() {
-    def property = Mock(GrailsDomainClassProperty)
-    property.referencedPropertyType >> Long
-    property.persistent >> false
-    property.name >> "relatedEntityId"
-    property.domainClass >> domainClass()
-    property
-  }
-
-  GrailsDomainClass domainClass() {
-    def domain = Mock(GrailsDomainClass)
-    domain.getPropertyByName("relatedEntity") >> relatedEntityProperty()
-    domain.hasProperty(_) >> {args -> "format" != args[0]}
-    domain
-  }
-
-  GrailsDomainClass relatedEntityDomain() {
-    def domain = Mock(GrailsDomainClass)
-    domain.getIdentifier() >> id()
-    domain
+  PersistentEntity relatedEntityDomain() {
+    def entity = Mock(PersistentEntity)
+    entity.identity >> id()
+    entity
   }
 
   class RelatedEntity {

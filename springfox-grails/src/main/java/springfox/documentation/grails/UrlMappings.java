@@ -3,9 +3,10 @@ package springfox.documentation.grails;
 import com.fasterxml.classmate.ResolvedType;
 import com.fasterxml.classmate.TypeResolver;
 import com.google.common.base.Strings;
-import grails.core.GrailsDomainClass;
-import grails.validation.ConstrainedProperty;
+import grails.gorm.validation.ConstrainedProperty;
 import grails.web.mapping.UrlMapping;
+import org.grails.datastore.mapping.model.PersistentEntity;
+import org.grails.datastore.mapping.model.PersistentProperty;
 import springfox.documentation.service.ResolvedMethodParameter;
 
 import java.util.Arrays;
@@ -36,7 +37,7 @@ class UrlMappings {
   }
 
   public static Map<String, String> pathParameters(UrlMapping mapping) {
-    ConstrainedProperty[] constraints = mapping.getConstraints();
+    ConstrainedProperty[] constraints = getConstraints(mapping);
     return IntStream.range(0, constraints.length)
         .filter(indicesToUse(mapping))
         .mapToObj(i -> constraints[i])
@@ -48,8 +49,8 @@ class UrlMappings {
   public static List<ResolvedMethodParameter> resolvedPathParameters(
       TypeResolver resolver,
       UrlMapping mapping,
-      GrailsDomainClass domainClass) {
-    ConstrainedProperty[] constraints = mapping.getConstraints();
+      PersistentEntity entity) {
+    ConstrainedProperty[] constraints = getConstraints(mapping);
     List<ConstrainedProperty> pathProperties = IntStream.range(0, constraints.length)
         .filter(indicesToUse(mapping))
         .mapToObj(i -> constraints[i])
@@ -60,7 +61,7 @@ class UrlMappings {
           pathParameter(
               index,
               pathProperties.get(index).getPropertyName(),
-              resolvedPropertyType(resolver, domainClass, pathProperties.get(index))));
+              resolvedPropertyType(resolver, entity, pathProperties.get(index))));
     }
 
     return resolved;
@@ -68,7 +69,7 @@ class UrlMappings {
 
   private static IntPredicate indicesToUse(UrlMapping mapping) {
     return index -> {
-      ConstrainedProperty property = mapping.getConstraints()[index];
+      ConstrainedProperty property = getConstraints(mapping)[index];
       return !property.getPropertyName().equals("controller")
           && !property.getPropertyName().equals("action")
           && !property.isNullable();
@@ -77,10 +78,11 @@ class UrlMappings {
 
   private static ResolvedType resolvedPropertyType(
       TypeResolver resolver,
-      GrailsDomainClass domainClass,
+      PersistentEntity entity,
       ConstrainedProperty property) {
-    if (domainClass.hasProperty(property.getPropertyName())) {
-      return resolver.resolve(domainClass.getPropertyByName(property.getPropertyName()).getType());
+    PersistentProperty persistentProperty = entity.getPropertyByName(property.getPropertyName());
+    if (persistentProperty != null) {
+      return resolver.resolve(persistentProperty.getType());
     }
     return resolver.resolve(String.class);
   }
@@ -120,8 +122,12 @@ class UrlMappings {
   }
 
   private static boolean hasControllerConstraint(UrlMapping urlMapping, String name) {
-    return !Arrays.stream(urlMapping.getConstraints())
+    return !Arrays.stream(getConstraints(urlMapping))
         .filter(c -> c.getPropertyName().equals(name))
         .collect(Collectors.toList()).isEmpty();
+  }
+
+  private static ConstrainedProperty[] getConstraints(UrlMapping urlMapping) {
+    return (ConstrainedProperty[])urlMapping.getConstraints();
   }
 }

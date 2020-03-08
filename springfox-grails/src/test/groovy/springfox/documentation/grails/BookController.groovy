@@ -1,7 +1,7 @@
 package springfox.documentation.grails
 
 
-import grails.transaction.Transactional
+import grails.gorm.transactions.Transactional
 import grails.web.Action
 import io.swagger.annotations.ApiImplicitParam
 import io.swagger.annotations.ApiImplicitParams

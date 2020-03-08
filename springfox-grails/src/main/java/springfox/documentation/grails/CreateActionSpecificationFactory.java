@@ -22,7 +22,7 @@ class CreateActionSpecificationFactory implements ActionSpecificationFactory {
         context.supportedMediaTypes(),
         context.handlerMethod(),
         Collections.singletonList(
-            bodyParameter(1, resolver.resolve(domainClass(context.getDomainClass())))),
-        resolver.resolve(domainClass(context.getDomainClass())));
+            bodyParameter(1, resolver.resolve(entityClass(context.getPersistentEntity())))),
+        resolver.resolve(entityClass(context.getPersistentEntity())));
   }
 }
