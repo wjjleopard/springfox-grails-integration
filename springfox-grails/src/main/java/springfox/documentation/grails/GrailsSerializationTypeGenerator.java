@@ -1,13 +1,16 @@
 package springfox.documentation.grails;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.grails.datastore.mapping.model.PersistentEntity;
+import org.grails.datastore.mapping.model.PersistentProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import springfox.documentation.builders.AlternateTypeBuilder;
 import springfox.documentation.builders.AlternateTypePropertyBuilder;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class GrailsSerializationTypeGenerator {
@@ -27,11 +30,25 @@ public class GrailsSerializationTypeGenerator {
   }
 
   public Class<?> from(PersistentEntity entity) {
+
+    Set<PersistentProperty> allEntityProperties = new HashSet<>();
+    if (entity.getIdentity() != null) {
+      allEntityProperties.add(entity.getIdentity());
+    }
+    if (entity.getCompositeIdentity() != null) {
+      allEntityProperties.addAll(Arrays.asList(entity.getCompositeIdentity()));
+    }
+    if (entity.getPersistentProperties() != null) {
+      allEntityProperties.addAll(entity.getPersistentProperties());
+    }
+
     List<AlternateTypePropertyBuilder> properties =
-        entity.getPersistentProperties().stream()
-            .filter(propertySelector)
+        allEntityProperties.stream()
+            //show all persistent properties.
+            //.filter(propertySelector)
             .map(propertyTransformer)
             .collect(Collectors.toList());
+
     return new AlternateTypeBuilder()
         .fullyQualifiedClassName(naming.name(entity.getJavaClass()))
         .withProperties(properties)
