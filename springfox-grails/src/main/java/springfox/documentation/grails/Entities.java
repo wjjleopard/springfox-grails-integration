@@ -5,8 +5,13 @@ import org.grails.datastore.mapping.model.PersistentEntity;
 
 public class Entities {
 
+  private Entities() {
+    throw new UnsupportedOperationException();
+  }
+
   /**
-   * follow the logic in {@link org.grails.core.AbstractGrailsClass#AbstractGrailsClass(Class, String)}
+   * follow the logic in {@link org.grails.core.AbstractGrailsClass#AbstractGrailsClass(Class,
+   * String)}
    *
    * @param entity instance of {@link PersistentEntity}
    * @return the logic property name for entity

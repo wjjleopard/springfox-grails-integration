@@ -1,15 +1,17 @@
 package grails.springfox.sample
 
-import grails.test.mixin.integration.Integration
+import grails.testing.mixin.integration.Integration
 import groovy.json.JsonOutput
+import groovy.util.logging.Slf4j
 import org.junit.Assert
 import org.skyscreamer.jsonassert.JSONAssert
 import org.skyscreamer.jsonassert.JSONCompareMode
-import org.springframework.boot.context.embedded.LocalServerPort
+import org.springframework.boot.web.server.LocalServerPort
 import spock.lang.Specification
 
 import static io.restassured.RestAssured.get
 
+@Slf4j
 @Integration
 class SpringFoxSpec extends Specification implements FileAccess {
   @LocalServerPort
@@ -22,6 +24,7 @@ class SpringFoxSpec extends Specification implements FileAccess {
 
     expect:
       try {
+        println("actual json: ${actual}")
         JSONAssert.assertEquals(
             expected.replaceAll("__PORT__", "$port"),
             actual,

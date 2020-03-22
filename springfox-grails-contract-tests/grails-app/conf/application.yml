@@ -20,7 +20,11 @@ endpoints:
     enabled: false
     jmx:
         enabled: true
-
+springfox:
+    documentation:
+        auto-startup: false
+server:
+    port: 8081
 ---
 grails:
     mime:
@@ -70,7 +74,7 @@ dataSource:
     jmxExport: true
     driverClassName: org.h2.Driver
     username: sa
-    password:
+    password: ''
 
 environments:
     development:
